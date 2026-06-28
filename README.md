@@ -1,182 +1,228 @@
-# TP04 -- Estruturas Condicionais
+# EXPA04 — Sistema de Gestão de Stock
 
-**Disciplina:** Programacao e Sistemas de Informacao (PSI) -- Modulo 3
-**Trabalho Pratico:** 04
-**Turma:** 1.o I -- N.o 14785
+**Disciplina:** Programação e Sistemas de Informação (PSI) — Módulo 3
+**Exercício Prático:** 04
+**Código:** `1I-PSI-M3-14785-EXPA04`
+**Turma:** 1.º I — N.º 14785
 **Ano Letivo:** 2025/2026
 
-Introducao as estruturas `if / elif / else` em quatro cenarios progressivamente mais complexos: multibanco, classificacao etaria, maior de tres numeros e sistema de desconto.
+Programa em Python que gere o stock de materiais escolares. Usa dicionários, funções e um menu interativo com seis opções. Inclui funcionalidade extra de exportação para ficheiro `.txt` com marca temporal, desenvolvida de forma autónoma além do enunciado original.
 
 ---
 
 ## Ficheiros
 
-| Ficheiro | Enunciado |
+| Ficheiro | Descrição |
 |---|---|
-| `01.1.py` | Multibanco -- saldo e levantamento dinamicos |
-| `01.2.py` | Multibanco -- saldo fixo de 100 euros com detalhe do valor em falta |
-| `02.py` | Classificacao etaria: Crianca / Jovem / Adulto / Senior |
-| `03.py` | Maior de 3 numeros sem usar `max()` |
-| `04.py` | Sistema de desconto automatico e personalizado |
+| `1I-PSI-M3-14785-EXPA04.py` | Programa completo |
+| `2026.03.24.08.39.52-Stock_Export.txt` | Exemplo de exportação gerada pelo programa |
+| `README.md` | Este ficheiro |
 
 ---
 
-## Exercicios
+## Funcionalidades
 
-### 01.1.py -- Multibanco (Valores Dinamicos)
-
-Enunciado: Pedir saldo e valor a levantar; autorizar ou rejeitar.
-
-```python
-saldo = float(input("Indique o valor do saldo: "))
-valor_a_levantar = float(input("Indique o valor a levantar: "))
-if saldo >= valor_a_levantar:
-    print("Saldo positivo, aprovado!")
-else:
-    print("Saldo negativo, reprovado!")
-```
-
----
-
-### 01.2.py -- Multibanco (Saldo Fixo com Detalhe)
-
-Enunciado: Saldo fixo de 100 euros -- mostrar exatamente quanto falta se insuficiente.
-
-```python
-saldo = 100
-valor_a_levantar = float(input("Indique o valor a levantar: "))
-saldo_restante = saldo - valor_a_levantar
-if saldo >= valor_a_levantar:
-    print(f"O valor restante e {saldo_restante}euros")
-else:
-    print("Saldo negativo!")
-    print("A Operacao nao foi concedida!")
-    print(f"Para completar a operacao, o Sr. precisa de {saldo_restante*-1}euros")
-```
-
-Nota: `saldo_restante * -1` converte o valor negativo em positivo para mostrar o montante em falta.
-
----
-
-### 02.py -- Classificacao Etaria
-
-Enunciado: Pedir a idade e classificar em quatro faixas.
-
-```python
-idade = int(input("Idade: "))
-if idade <= 0:
-    print("A tua idade humana e impossivel")
-elif idade <= 13:
-    print("Tu es uma Crianca")
-elif idade <= 17:
-    print("Tu es um Jovem")
-elif idade <= 64:
-    print("Tu es um Adulto")
-else:
-    print("Tu es um Senior")
-```
-
-| Faixa | Categoria |
+| Opção | Ação |
 |---|---|
-| <= 0 | Invalida |
-| 1 a 13 | Crianca |
-| 14 a 17 | Jovem |
-| 18 a 64 | Adulto |
-| 65 ou mais | Senior |
+| 1 | Adicionar material e quantidade inicial |
+| 2 | Consultar stock de um material específico |
+| 3 | Atualizar stock — adicionar (A) ou remover (R) unidades |
+| 4 | Exibir estado geral do stock |
+| 5 | Exportar stock para ficheiro `.txt` com marca temporal |
+| 6 | Sair |
 
 ---
 
-### 03.py -- Maior de 3 Numeros
+## Funções Implementadas
 
-Enunciado: Pedir 3 numeros e mostrar o maior, sem usar `max()`.
+### `adicionar_material(stock)`
 
-```python
-num1 = int(input("1.o Numero: "))
-num2 = int(input("2.o Numero: "))
-num3 = int(input("3.o Numero: "))
-print("---")
-if num1 > num2 and num1 > num3:
-    print(f"O maior numero e {num1}")
-elif num2 > num1 and num2 > num3:
-    print(f"O maior numero e {num2}")
-elif num3 > num2 and num3 > num1:
-    print(f"O maior numero e {num3}")
-else:
-    print("Nao insire valores repetidos")
-    print("Insire valores corretos")
-```
-
-Nota: o ramo `else` captura o caso em que dois ou mais valores sao iguais.
-
----
-
-### 04.py -- Sistema de Desconto
-
-Enunciado: Pedir o valor de compra e aplicar desconto automatico ou personalizado.
+Regista um novo material no dicionário `stock`. Verifica se já existe antes de inserir. Valida que a quantidade inicial não é negativa e que é um número inteiro.
 
 ```python
-compra = float(input("Valor da compra: "))
-desconto_input = float(input("Valor de aplicacao de desconto (em %, digite 0 para desconto automatico): "))
-print("---")
-valor_desconto = 0
-
-if desconto_input == 0:
-    if compra >= 100:
-        valor_desconto = compra * 0.10   # 10% de desconto
-    elif compra >= 50:
-        valor_desconto = compra * 0.05   # 5% de desconto
+def adicionar_material(stock):
+    nome = input("Nome do material: ").capitalize()
+    if nome in stock:
+        print("O material ja existe no stock!")
     else:
-        valor_desconto = 0               # Sem desconto
-else:
-    valor_desconto = compra * (desconto_input / 100)
-
-compra_total = compra - valor_desconto
-if valor_desconto > 0:
-    print(f"O valor da compra com desconto de {valor_desconto:.2f}euros e de: {compra_total:.2f}euros")
-else:
-    print(f"O valor da compra sem desconto e de: {compra_total:.2f}euros")
+        try:
+            quantidade = int(input(f"Quantidade inicial de {nome}: "))
+            if quantidade < 0:
+                print("Quantidade nao pode ser negativa!")
+                return
+            stock[nome] = quantidade
+            print(f"{nome} adicionado com sucesso!")
+        except ValueError:
+            print("Erro: Quantidade invalida! Deve ser um numero inteiro.")
 ```
 
-| Valor da compra | Desconto automatico |
-|---|---|
-| >= 100 euros | 10% |
-| >= 50 euros | 5% |
-| < 50 euros | 0% |
-| Personalizado | percentagem definida pelo utilizador |
+---
+
+### `consultar_stock(stock)`
+
+Pesquisa um material no dicionário e mostra a quantidade disponível. Informa se o material não existe.
+
+```python
+def consultar_stock(stock):
+    nome = input("Nome do material para consulta: ").capitalize()
+    if nome in stock:
+        print(f"O stock atual de {nome} e: {stock[nome]}")
+    else:
+        print(f"{nome} nao encontrado no stock.")
+```
+
+---
+
+### `atualizar_stock(stock)`
+
+Permite adicionar (`A`) ou remover (`R`) unidades de um material existente. Na remoção, verifica se há stock suficiente antes de subtrair.
+
+```python
+def atualizar_stock(stock):
+    nome = input("Nome do material a atualizar: ").capitalize()
+    if nome in stock:
+        operacao = input("Deseja adicionar (A) ou remover (R)? ").upper()
+        try:
+            quantidade = int(input("Quantidade: "))
+            if quantidade < 0:
+                print("Erro: Quantidade nao pode ser negativa!")
+                return
+            if operacao == "A":
+                stock[nome] += quantidade
+            elif operacao == "R":
+                if quantidade <= stock[nome]:
+                    stock[nome] -= quantidade
+                else:
+                    print("Quantidade insuficiente em stock!")
+            else:
+                print("Operacao invalida!")
+        except ValueError:
+            print("Erro: Quantidade invalida! Deve ser um numero inteiro.")
+    else:
+        print(f"{nome} nao encontrado no stock.")
+```
+
+---
+
+### `exibir_stock(stock)`
+
+Mostra o estado geral do dicionário em formato tabular. Indica se o stock está vazio.
+
+```python
+def exibir_stock(stock):
+    print("\nEstado Geral do Stock:")
+    print("Material\tQuantidade")
+    print("-" * 30)
+    if not stock:
+        print("Stock vazio.")
+    else:
+        for material, quantidade in stock.items():
+            print(f"{material}\t\t{quantidade}")
+```
+
+---
+
+### `file_export(stock)` — Funcionalidade Extra
+
+Exporta o estado atual do stock para um ficheiro `.txt`. O nome do ficheiro inclui a data e hora exatas da exportação no formato `AAAA.MM.DD.HH.MM.SS-Stock_Export.txt`.
+
+```python
+def file_export(stock):
+    if not stock:
+        print("Stock vazio. Nada para exportar.")
+        return
+    now = datetime.datetime.now()
+    formatted_time = now.strftime("%Y.%m.%d.%H.%M.%S")
+    filename = f"{formatted_time}-Stock_Export.txt"
+    try:
+        with open(filename, "w", encoding="utf-8") as file:
+            file.write("Material\tQuantidade\n")
+            file.write("-" * 30 + "\n")
+            for material, quantidade in stock.items():
+                file.write(f"{material}\t\t{quantidade}\n")
+        print(f"Stock exportado com sucesso para: {filename}")
+    except IOError:
+        print("Erro: Nao foi possivel criar o ficheiro.")
+```
+
+Exemplo de ficheiro gerado (`2026.03.24.08.39.52-Stock_Export.txt`):
+
+```
+Material    Quantidade
+------------------------------
+Cobre       110
+Rodrigo     1
+```
+
+---
+
+## Estrutura Geral do Programa
+
+```
+main()
+|
++-- stock = {}              # dicionário vazio
+|
++-- while True              # menu repetitivo
+    |
+    +-- opção 1 --> adicionar_material(stock)
+    |
+    +-- opção 2 --> consultar_stock(stock)
+    |
+    +-- opção 3 --> atualizar_stock(stock)
+    |
+    +-- opção 4 --> exibir_stock(stock)
+    |
+    +-- opção 5 --> file_export(stock)    # funcionalidade extra
+    |
+    +-- opção 6 --> break
+```
 
 ---
 
 ## Conceitos Abordados
 
-| Conceito | Descricao |
+| Conceito | Aplicação |
 |---|---|
-| `if / else` | Bifurcacao entre dois caminhos |
-| `if / elif / else` | Multiplas condicoes exclusivas |
-| `if` aninhado | Condicionais dentro de condicionais |
-| `and` | Duas condicoes verdadeiras em simultaneo |
-| `float()` | Suporta valores monetarios decimais |
-| f-string `:.2f` | Formatacao para 2 casas decimais |
+| Dicionário (`dict`) | Estrutura chave-valor para o stock |
+| `.capitalize()` | Normalização do nome do material |
+| `in` | Verificar se chave existe no dicionário |
+| `.items()` | Iterar sobre pares chave-valor |
+| `try / except ValueError` | Tratamento de entrada não numérica |
+| `datetime` | Marca temporal para nome do ficheiro |
+| `open()` com `with` | Escrita de ficheiro com gestão automática |
+| Funções | Uma responsabilidade por função |
+| `if __name__ == "__main__"` | Ponto de entrada do programa |
+
+---
+
+## Diferença Face ao Enunciado Original
+
+O enunciado previa quatro funções e um menu com quatro opções. Foram introduzidas duas melhorias autónomas:
+
+1. Validação de entradas em `adicionar_material` e `atualizar_stock` com `try / except` — o original não validava o tipo nem valores negativos.
+2. Função `file_export` com exportação para `.txt` com marca temporal — opção 5 adicionada ao menu.
 
 ---
 
 ## Como Executar
 
 ```bash
-git clone https://github.com/a14785-oficina/Trabalho-Pratico-04-M3.git
-cd Trabalho-Pratico-04-M3
-python3 01.1.py
+git clone https://github.com/a14785-oficina/sistema-gestao-stock.git
+cd sistema-gestao-stock
+python3 1I-PSI-M3-14785-EXPA04.py
 ```
 
 ---
 
-## Navegacao -- Modulo 3
+## Navegação — Módulo 3
 
-| Posicao | Repositorio |
+| Posição | Repositório |
 |---|---|
-| Anterior | [TP03 -- Operadores](https://github.com/a14785-oficina/Trabalho-Pratico-03-M3) |
-| Seguinte | [EXPA01 -- Estruturas Condicionais em Python](https://github.com/a14785-oficina/Estruturas-Condicionais-em-Python) |
-| Portfolio | [oficina-jpc](https://github.com/a14785-oficina/oficina-jpc) |
+| Anterior | [EXPA03 — Sistema de Gestão de Notas](https://github.com/a14785-oficina/sistema-gestao-notas) |
+| Seguinte | Início do Módulo 17 |
+| Portfólio | [oficina-jpc](https://github.com/a14785-oficina/oficina-jpc) |
 
 ---
 
-*PSI -- Modulo 3 -- Programacao Estruturada -- OFICINA -- 2025/2026*
+*PSI — Módulo 3 — Programação Estruturada — OFICINA — 2025/2026*
